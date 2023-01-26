@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vehicle.project.vehicle.mapper.VhFaultCodeMapper">
+
+    <resultMap type="VhFaultCode" id="VhFaultCodeResult">
+        <result property="id" column="id"/>
+        <result property="faultCode" column="fault_code"/>
+        <result property="codeExplain" column="code_explain"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="dataScope" column="data_scope"/>
+        <result property="maintainDept" column="maintain_dept"/>
+    </resultMap>
+
+    <sql id="selectVhFaultCodeVo">
+        select t.id, fault_code, code_explain, t.create_time, t.create_by, t.update_time, t.update_by,t.maintain_dept
+        from vh_fault_code t
+        LEFT JOIN sys_user u ON u.user_id = t.user_id
+        LEFT JOIN sys_dept d ON u.dept_id = d.dept_id
+    </sql>
+
+    <select id="selectVhFaultCodeList" parameterType="VhFaultCode" resultMap="VhFaultCodeResult">
+        <include refid="selectVhFaultCodeVo"/>
+        <where>
+            <if test="faultCode != null  and faultCode != ''">
+                and fault_code like concat('%', #{faultCode}, '%')
+            </if>
+            <if test="codeExplain != null  and codeExplain != ''">and code_explain like concat('%', #{codeExplain},
+                '%')
+            </if>
+            ${dataScope}
+        </where>
+    </select>
+
+    <select id="selectVhFaultCodeById" parameterType="Long" resultMap="VhFaultCodeResult">
+        <include refid="selectVhFaultCodeVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectVhFaultCodeByIds" parameterType="Long" resultMap="VhFaultCodeResult">
+        <include refid="selectVhFaultCodeVo"/>
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+    <select id="selectVhFaultCodeByCode" resultMap="VhFaultCodeResult">
+        <include refid="selectVhFaultCodeVo"/>
+        where fault_code = #{faultCode}
+    </select>
+    <select id="selectVhMaintainCode" resultType="com.vehicle.project.vehicle.domain.VhFaultCode">
+        <include refid="selectVhFaultCodeVo"/>
+        <where>
+            <if test="faultCode != null  and faultCode != ''">
+                and fault_code like concat('%', #{faultCode}, '%')
+            </if>
+            <if test="codeExplain != null  and codeExplain != ''">
+                and code_explain like concat('%', #{codeExplain},'%')
+            </if>
+            <if test="maintainDept != null  and maintainDept != ''">and maintain_dept = #{maintainDept}</if>
+        </where>
+    </select>
+
+    <select id="selectVhFaultCodeByFaultCodeAndDept" resultType="com.vehicle.project.vehicle.domain.VhFaultCode">
+        <include refid="selectVhFaultCodeVo"/>
+        where fault_code = #{faultCode} and maintain_dept = #{maintainDept}
+    </select>
+
+    <insert id="insertVhFaultCode" parameterType="VhFaultCode" useGeneratedKeys="true" keyProperty="id">
+        insert into vh_fault_code
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="faultCode != null  and faultCode != ''">fault_code,</if>
+            <if test="codeExplain != null  and codeExplain != ''">code_explain,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="maintainDept != null  and maintainDept != ''">maintain_dept,</if>
+            <if test="userId != null  and userId != ''">user_id,</if>
+            create_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="faultCode != null  and faultCode != ''">#{faultCode},</if>
+            <if test="codeExplain != null  and codeExplain != ''">#{codeExplain},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="maintainDept != null  and maintainDept != ''">#{maintainDept},</if>
+            <if test="userId != null  and userId != ''">#{userId},</if>
+            sysdate()
+        </trim>
+    </insert>
+
+    <update id="updateVhFaultCode" parameterType="VhFaultCode">
+        update vh_fault_code
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="faultCode != null  and faultCode != ''">fault_code = #{faultCode},</if>
+            <if test="codeExplain != null  and codeExplain != ''">code_explain = #{codeExplain},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteVhFaultCodeById" parameterType="Long">
+        delete from vh_fault_code where id = #{id}
+    </delete>
+
+    <delete id="deleteVhFaultCodeByIds" parameterType="String">
+        delete from vh_fault_code where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

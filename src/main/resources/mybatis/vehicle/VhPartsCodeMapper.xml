@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vehicle.project.vehicle.mapper.VhPartsCodeMapper">
+
+    <resultMap type="VhPartsCode" id="VhPartsCodeResult">
+        <result property="id" column="id"/>
+        <result property="materialCode" column="material_code"/>
+        <result property="materialName" column="material_name"/>
+        <result property="materialUnit" column="material_unit"/>
+        <result property="amount" column="amount"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="maintainDept" column="maintain_dept"/>
+        <result property="dataScope" column="data_scope"/>
+    </resultMap>
+
+    <sql id="selectVhPartsCodeVo">
+        select t.id, material_code, material_name, material_unit, amount, t.create_time, t.create_by, t.update_time, t.update_by,maintain_dept
+        from vh_parts_code t
+        LEFT JOIN sys_user u ON u.user_id = t.user_id
+        LEFT JOIN sys_dept d ON u.dept_id = d.dept_id
+    </sql>
+
+    <select id="selectVhPartsCodeList" parameterType="VhPartsCode" resultMap="VhPartsCodeResult">
+        <include refid="selectVhPartsCodeVo"/>
+        <where>
+            <if test="materialCode != null  and materialCode != ''">and material_code like concat ('%', #{materialCode},
+                '%')
+            </if>
+            <if test="materialName != null  and materialName != ''">and material_name like concat('%',
+                #{materialName},'%')
+            </if>
+            <if test="materialUnit != null  and materialUnit != ''">and material_unit = #{materialUnit}</if>
+            <if test="amount != null  and amount != ''">and amount = #{amount}</if>
+            ${dataScope}
+        </where>
+    </select>
+
+    <select id="selectVhPartsCodeById" parameterType="Long" resultMap="VhPartsCodeResult">
+        <include refid="selectVhPartsCodeVo"/>
+        where t.id = #{id}
+    </select>
+
+    <select id="selectVhPartsCodeByIds" parameterType="Long" resultMap="VhPartsCodeResult">
+        <include refid="selectVhPartsCodeVo"/>
+        where t.id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="selectVhPartsCodeByCode" resultMap="VhPartsCodeResult">
+        <include refid="selectVhPartsCodeVo"/>
+        where material_code = #{materialCode}
+    </select>
+    <select id="selectVhPartsCode" resultMap="VhPartsCodeResult">
+        <include refid="selectVhPartsCodeVo"/>
+        <where>
+            <if test="materialCode != null  and materialCode != ''">and material_code = #{materialCode}
+            </if>
+            <if test="materialName != null  and materialName != ''">and material_name like concat('%',
+                #{materialName},'%')
+            </if>
+            <if test="materialUnit != null  and materialUnit != ''">and material_unit = #{materialUnit}</if>
+            <if test="amount != null  and amount != ''">and amount = #{amount}</if>
+            <if test="maintainDept != null  and maintainDept != ''">and maintain_dept = #{maintainDept}</if>
+        </where>
+    </select>
+
+    <select id="selectVhPartsCodeByPartsCodeAndDept" resultMap="VhPartsCodeResult">
+        <include refid="selectVhPartsCodeVo"/>
+        where material_code = #{materialCode} and maintain_dept = #{maintainDept}
+    </select>
+
+    <insert id="insertVhPartsCode" parameterType="VhPartsCode" useGeneratedKeys="true" keyProperty="id">
+        insert into vh_parts_code
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="materialCode != null  and materialCode != ''">material_code,</if>
+            <if test="materialName != null  and materialName != ''">material_name,</if>
+            <if test="materialUnit != null  and materialUnit != ''">material_unit,</if>
+            <if test="amount != null  and amount != ''">amount,</if>
+            <if test="maintainDept != null  and maintainDept != ''">maintain_dept,</if>
+            <if test="userId != null  and userId != ''">user_id,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            create_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="materialCode != null  and materialCode != ''">#{materialCode},</if>
+            <if test="materialName != null  and materialName != ''">#{materialName},</if>
+            <if test="materialUnit != null  and materialUnit != ''">#{materialUnit},</if>
+            <if test="amount != null  and amount != ''">#{amount},</if>
+            <if test="maintainDept != null  and maintainDept != ''">#{maintainDept},</if>
+            <if test="userId != null  and userId != ''">#{userId},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            sysdate()
+        </trim>
+    </insert>
+    <insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        insert into vh_parts_code(material_code,material_name,material_unit,amount,maintain_dept,user_id,create_by)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.materialCode},
+            #{item.materialName},
+            #{item.materialUnit},
+            #{item.amount},
+            #{item.maintainDept},
+            #{item.userId},
+            #{item.createBy}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updateVhPartsCode" parameterType="VhPartsCode">
+        update vh_parts_code
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="materialCode != null  and materialCode != ''">material_code = #{materialCode},</if>
+            <if test="materialName != null  and materialName != ''">material_name = #{materialName},</if>
+            <if test="materialUnit != null  and materialUnit != ''">material_unit = #{materialUnit},</if>
+            <if test="amount != null  and amount != ''">amount = #{amount},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="batchUpdate">
+        update vh_parts_code
+        <trim prefix="SET" suffixOverrides=",">
+            <trim prefix="material_code = case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when id = (#{item.id})
+                    then #{item.materialCode}
+                </foreach>
+            </trim>
+            <trim prefix="material_name = case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when id = (#{item.id})
+                    then #{item.materialName}
+                </foreach>
+            </trim>
+            <trim prefix="material_unit = case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when id = (#{item.id})
+                    then #{item.materialUnit}
+                </foreach>
+            </trim>
+            <trim prefix="amount = case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when id = (#{item.id})
+                    then #{item.amount}
+                </foreach>
+            </trim>
+            <trim prefix="update_by = case" suffix="end">
+                <foreach collection="list" item="item">
+                    when id = (#{item.id})
+                    then #{item.updateBy}
+                </foreach>
+            </trim>
+            where
+            id in
+            <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+                #{item.id}
+            </foreach>
+
+        </trim>
+    </update>
+
+    <delete id="deleteVhPartsCodeById" parameterType="Long">
+        delete from vh_parts_code where id = #{id}
+    </delete>
+
+    <delete id="deleteVhPartsCodeByIds" parameterType="String">
+        delete from vh_parts_code where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

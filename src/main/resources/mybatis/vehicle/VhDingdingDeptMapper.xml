@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vehicle.project.vehicle.mapper.VhDingdingDeptMapper">
+    
+    <resultMap type="VhDingdingDept" id="VhDingdingDeptResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="createDeptGroup"    column="create_dept_group"    />
+        <result property="autoAddUser"    column="auto_add_user"    />
+        <result property="ext"    column="ext"    />
+    </resultMap>
+
+    <sql id="selectVhDingdingDeptVo">
+        select id, name, parent_id, create_dept_group, auto_add_user, ext from vh_dingding_dept
+    </sql>
+
+    <select id="selectVhDingdingDeptList" parameterType="VhDingdingDept" resultMap="VhDingdingDeptResult">
+        <include refid="selectVhDingdingDeptVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+            <if test="createDeptGroup != null "> and create_dept_group = #{createDeptGroup}</if>
+            <if test="autoAddUser != null "> and auto_add_user = #{autoAddUser}</if>
+            <if test="ext != null  and ext != ''"> and ext = #{ext}</if>
+        </where>
+    </select>
+    
+    <select id="selectVhDingdingDeptById" parameterType="Long" resultMap="VhDingdingDeptResult">
+        <include refid="selectVhDingdingDeptVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertVhDingdingDept" parameterType="VhDingdingDept">
+        insert into vh_dingding_dept
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null ">id,</if>
+            <if test="name != null  and name != ''">name,</if>
+            <if test="parentId != null ">parent_id,</if>
+            <if test="createDeptGroup != null ">create_dept_group,</if>
+            <if test="autoAddUser != null ">auto_add_user,</if>
+            <if test="ext != null  and ext != ''">ext,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null ">#{id},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="parentId != null ">#{parentId},</if>
+            <if test="createDeptGroup != null ">#{createDeptGroup},</if>
+            <if test="autoAddUser != null ">#{autoAddUser},</if>
+            <if test="ext != null  and ext != ''">#{ext},</if>
+         </trim>
+    </insert>
+
+    <update id="updateVhDingdingDept" parameterType="VhDingdingDept">
+        update vh_dingding_dept
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="parentId != null ">parent_id = #{parentId},</if>
+            <if test="createDeptGroup != null ">create_dept_group = #{createDeptGroup},</if>
+            <if test="autoAddUser != null ">auto_add_user = #{autoAddUser},</if>
+            <if test="ext != null  and ext != ''">ext = #{ext},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteVhDingdingDeptById" parameterType="Long">
+        delete from vh_dingding_dept where id = #{id}
+    </delete>
+
+    <delete id="deleteVhDingdingDeptByIds" parameterType="String">
+        delete from vh_dingding_dept where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

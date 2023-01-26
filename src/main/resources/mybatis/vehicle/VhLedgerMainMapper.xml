@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vehicle.project.vehicle.mapper.VhLedgerMainMapper">
+
+    <resultMap type="VhLedgerMain" id="VhLedgerMainResult">
+        <result property="id" column="id"/>
+        <result property="businessNo" column="business_no"/>
+        <result property="vehicleCode" column="vehicle_code"/>
+        <result property="totalCrashBook" column="total_crash_book"/>
+        <result property="totalPartsAmount" column="total_parts_amount"/>
+        <result property="totalAmount" column="total_amount"/>
+        <result property="completeStatus" column="complete_status"/>
+        <result property="remark" column="remark"/>
+        <result property="predictCompleteDate" column="predict_complete_date"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="unfinishedReason" column="unfinished_reason"/>
+        <result property="exceptionStatus" column="exception_status"/>
+        <result property="handleResult" column="handle_result"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="lossNo" column="loss_no"/>
+        <result property="damageReason" column="damage_reason"/>
+        <result property="ledgerType" column="ledger_type"/>
+        <result property="maintainDept" column="maintain_dept"/>
+        <result property="maintainShift" column="maintain_shift"/>
+        <result property="maintainer" column="maintainer"/>
+        <result property="maintainDate" column="maintain_date"/>
+        <result property="nextUpkeepDate" column="next_upkeep_date"/>
+        <result property="userId" column="user_id"/>
+        <result property="custom" column="custom"/>
+        <result property="staffNum" column="staff_num"/>
+        <result property="consignee" column="consignee"/>
+        <result property="processStartTime" column="process_start_time"/>
+        <result property="processEndTime" column="process_end_time"/>
+        <result property="userDept" column="user_dept"/>
+        <result property="orderStatus" column="order_status"/>
+        <result property="statusRemark" column="status_remark"/>
+        <result property="delDate" column="del_date"/>
+        <result property="niCompany" column="ni_company"/>
+    </resultMap>
+
+    <sql id="selectVhLedgerMainVo">
+        select id, mileage, business_no, vehicle_code,total_crash_book, total_parts_amount, total_amount, complete_status,
+          remark, predict_complete_date, create_time, update_time, unfinished_reason, exception_status,
+          handle_result, del_flag, loss_no, damage_reason, ledger_type, maintain_dept, maintain_shift, maintainer, maintain_date, next_upkeep_date,
+          custom, staff_num, consignee, process_start_time, process_end_time,order_status,status_remark, ni_company
+        from vh_ledger_main
+    </sql>
+
+    <select id="selectVhLedgerMainList" parameterType="VhLedgerMain"
+            resultType="com.vehicle.project.vehicle.domain.VhLedgerMain">
+        <!--<include refid="selectVhLedgerMainVo"/>-->
+        SELECT
+        t.id,
+        t.del_date delDate,
+        t.business_no businessNo,
+        t.vehicle_code vehicleCode,
+        total_crash_book totalCrashBook,
+        total_parts_amount totalPartsAmount,
+        total_amount totalAmount,
+        complete_status completeStatus,
+        t.remark,
+        predict_complete_date predictCompleteDate,
+        t.create_time createTime,
+        t.update_time updateTime,
+        unfinished_reason unfinishedReason,
+        exception_status exceptionStatus,
+        handle_result handleResult,
+        t.del_flag delFlag,
+        loss_no lossNo,
+        damage_reason damageReason,
+        t.ledger_type ledgerType,
+        t.maintain_dept maintainDept,
+        t.maintain_shift maintainShift,
+        t.ni_company niCompany,
+        t.maintainer,
+        maintain_date maintainDate,
+        next_upkeep_date nextUpkeepDate,
+        custom,
+        staff_num staffNum,
+        consignee,
+        process_start_time processStartTime,
+        process_end_time processEndTime,
+        order_status orderStatus,
+        status_remark statusRemark,
+        mileage
+        FROM
+        vh_ledger_main t
+        LEFT JOIN sys_user u ON u.user_id = t.user_id
+        LEFT JOIN sys_dept d ON u.dept_id = d.dept_id
+        <where>
+            <if test="param1.businessNo != null  and param1.businessNo != ''">
+                and t.business_no like concat('%', #{param1.businessNo}, '%')
+            </if>
+            <if test="param1.damageReason != null  and param1.damageReason != ''">
+                and t.damage_reason = #{param1.damageReason}
+            </if>
+            <if test="param1.vehicleCode != null  and param1.vehicleCode != ''">
+                and t.vehicle_code like concat('%', #{param1.vehicleCode}, '%')
+            </if>
+            <if test="param1.orderStatus != null  and param1.orderStatus != ''">
+                and t.order_status like concat('%', #{param1.orderStatus}, '%')
+            </if>
+            <if test="param1.totalCrashBook != null  and param1.totalCrashBook != ''">and total_crash_book =
+                #{param1.totalCrashBook}
+            </if>
+            <if test="param1.niCompany != null  and param1.niCompany != ''">and ni_company =
+                #{param1.niCompany}
+            </if>
+            <if test="param1.totalPartsAmount != null  and param1.totalPartsAmount != ''">and total_parts_amount =
+                #{param1.totalPartsAmount}
+            </if>
+            <if test="param1.totalAmount != null  and param1.totalAmount != ''">and t.total_amount =
+                #{param1.totalAmount}
+            </if>
+            <if test="param1.completeStatus != null and param1.completeStatus != '' ">and complete_status =
+                #{param1.completeStatus}
+            </if>
+            <!--            <if test="param1.completeStatus == null">and complete_status != '1'</if>-->
+            <if test="param1.predictCompleteDate != null ">and predict_complete_date = #{param1.predictCompleteDate}
+            </if>
+            <if test="param1.unfinishedReason != null  and param1.unfinishedReason != ''">and unfinished_reason =
+                #{param1.unfinishedReason}
+            </if>
+            <if test="param1.exceptionStatus != null ">and exception_status = #{param1.exceptionStatus}</if>
+            <if test="param1.handleResult != null  and param1.handleResult != ''">and handle_result =
+                #{param1.handleResult}
+            </if>
+            <if test="param1.lossNo != null  and param1.lossNo != ''">and loss_no = #{param1.lossNo}</if>
+            <if test="param1.damageReason != null  and param1.damageReason != ''">and damage_reason =
+                #{param1.damageReason}
+            </if>
+            <if test="param1.ledgerType != null ">and t.ledger_type = #{param1.ledgerType}</if>
+            <if test="param1.maintainDate != null ">and t.maintain_date = #{param1.maintainDate}</if>
+            <if test="param1.nextUpkeepDate != null ">and next_upkeep_date = #{param1.nextUpkeepDate}</if>
+            <if test="param1.delFlag != null and param1.delFlag != ''">and t.del_flag = #{param1.delFlag}</if>
+            <if test="param1.maintainDept != null and param1.maintainDept != ''">and t.maintain_dept =
+                #{param1.maintainDept}
+            </if>
+            <if test="param1.maintainShift != null and param1.maintainShift != ''">
+                and t.maintain_shift like concat('%', #{param1.maintainShift}, '%')
+            </if>
+            <if test="param1.remark != null and param1.remark != ''">
+                and t.remark like concat('%', #{param1.remark}, '%')
+            </if>
+
+            <if test="param1.timeTypeStr != null and param1.timeTypeStr != ''">
+                <if test="param1.timeTypeStr == 'maintain_date'">
+                    <if test="param1.beginTime != null and param1.beginTime != ''"><!-- 开始时间检索 -->
+                        and maintain_date >= date_format(#{param1.beginTime},'%Y-%m-%d')
+                    </if>
+                    <if test="param1.endTime != null and param1.endTime != ''"><!-- 结束时间检索 -->
+                        and maintain_date &lt;= date_format(#{param1.endTime},'%Y-%m-%d')
+                    </if>
+                </if>
+                <if test="param1.timeTypeStr == 'update_time'">
+                    <if test="param1.beginTime != null and param1.beginTime != ''"><!-- 开始时间检索 -->
+                        and date_format(t.update_time,'%y%m%d') &gt;= date_format(#{param1.beginTime},'%y%m%d')
+                    </if>
+                    <if test="param1.endTime != null and param1.endTime != ''"><!-- 结束时间检索 -->
+                        and date_format(t.update_time,'%y%m%d') &lt;= date_format(#{param1.endTime},'%y%m%d')
+                    </if>
+                </if>
+                <if test="param1.timeTypeStr == 'del_date'">
+                    <if test="param1.beginTime != null and param1.beginTime != ''"><!-- 开始时间检索 -->
+                        and del_date &gt;= date_format(#{param1.beginTime},'%Y-%m-%d')
+                    </if>
+                    <if test="param1.endTime != null and param1.endTime != ''"><!-- 结束时间检索 -->
+                        and del_date &lt;= date_format(#{param1.endTime},'%Y-%m-%d')
+                    </if>
+                </if>
+            </if>
+
+            <!-- 级联查询 -->
+            <if test="param2 != null and param2.userDept != null  and param2.userDept != ''">
+                and t.user_dept like concat('%', #{param2.userDept}, '%')
+            </if>
+            <!-- 级联查询 -->
+            <if test="param1 != null and param1.userDept != null  and param1.userDept != ''">
+                and t.user_dept like concat('%', #{param1.userDept}, '%')
+            </if>
+            ${param1.dataScope}
+        </where>
+        order by t.business_no desc
+    </select>
+
+    <select id="selectVhLedgerMainById" parameterType="Long" resultMap="VhLedgerMainResult">
+        <include refid="selectVhLedgerMainVo"/>
+        where id = #{id}
+        and del_flag = '0'
+    </select>
+    <select id="selectVhLedgerMainByNo" resultMap="VhLedgerMainResult">
+        <include refid="selectVhLedgerMainVo"/>
+        where business_no = #{businessNo}
+        and del_flag = '0'
+    </select>
+    <select id="genTyreNo" resultType="java.lang.String">
+        SELECT
+            CONCAT(prefix, '-', num) target
+        FROM
+            (
+                SELECT
+                    max(business_no) tyreNo,
+                    IFNUll(
+                        LPAD(
+                            substring(max(business_no), - 5) + 1,
+                            5,
+                            0
+                        ),
+                        LPAD(1, 5, 0)
+                    ) num,
+                    CONCAT(
+                        #{perfix},
+                        date_format(CURDATE(), '%y%m')
+                    ) prefix
+                FROM
+                    vh_ledger_main
+                WHERE
+                     ledger_type = #{ledgerType}
+                AND maintain_dept = #{deptName}
+                AND create_time >= str_to_date(concat(date_format(CURDATE(), '%Y-%m'),'-01 00:00:00'),'%Y-%m-%d')
+                and INSTR(business_no,date_format(CREATE_time, '%y%m')) > 0
+            ) t
+    </select>
+    <select id="selectVhLedgerMain" resultMap="VhLedgerMainResult">
+        <include refid="selectVhLedgerMainVo"/>
+        <where>
+            <if test="businessNo != null  and businessNo != ''">
+                and business_no like concat('%', #{businessNo}, '%')
+            </if>
+            <if test="vehicleCode != null  and vehicleCode != ''">
+                and vehicle_code like concat('%', #{vehicleCode}, '%')
+            </if>
+            <if test="totalCrashBook != null  and totalCrashBook != ''">and total_crash_book = #{totalCrashBook}</if>
+            <if test="totalPartsAmount != null  and totalPartsAmount != ''">and total_parts_amount =
+                #{totalPartsAmount}
+            </if>
+            <if test="totalAmount != null  and totalAmount != ''">and total_amount = #{totalAmount}</if>
+            <if test="completeStatus != null and completeStatus != '' ">and complete_status = #{completeStatus}</if>
+            <if test="predictCompleteDate != null ">and predict_complete_date = #{predictCompleteDate}</if>
+            <if test="unfinishedReason != null  and unfinishedReason != ''">and unfinished_reason =
+                #{unfinishedReason}
+            </if>
+            <if test="exceptionStatus != null ">and exception_status = #{exceptionStatus}</if>
+            <if test="handleResult != null  and handleResult != ''">and handle_result = #{handleResult}</if>
+            <if test="lossNo != null  and lossNo != ''">and loss_no = #{lossNo}</if>
+            <if test="damageReason != null  and damageReason != ''">and damage_reason = #{damageReason}</if>
+            <if test="ledgerType != null ">and ledger_type = #{ledgerType}</if>
+            <if test="maintainDate != null ">and maintain_date = #{maintainDate}</if>
+            <if test="nextUpkeepDate != null ">and next_upkeep_date = #{nextUpkeepDate}</if>
+            <if test="delFlag != null and delFlag != ''">and del_flag = #{delFlag}</if>
+            <if test="timeTypeStr != null and timeTypeStr != ''">
+                <if test="timeTypeStr == 'maintain_date'">
+                    <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+                        and date_format(maintain_date,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+                    </if>
+                    <if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+                        and date_format(maintain_date,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+                    </if>
+                </if>
+                <if test="timeTypeStr == 'update_time'">
+                    <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+                        and date_format(update_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+                    </if>
+                    <if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+                        and date_format(update_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+                    </if>
+                </if>
+            </if>
+        </where>
+
+    </select>
+    <select id="genLossNo" resultType="java.lang.String">
+        SELECT
+            CONCAT(prefix, '-', num) target
+        FROM
+            (
+                SELECT
+                    max(loss_no) NO,
+                    IFNUll(
+                        LPAD(
+                            substring(max(loss_no), - 2) + 1,
+                            5,
+                            0
+                        ),
+                        LPAD(1, 5, 0)
+                    ) num,
+                    date_format(CURDATE(), '%Y') prefix
+                FROM
+                    vh_ledger_main
+                WHERE
+                    substring(loss_no, 1, 4) = date_format(CURDATE(), '%Y')
+                AND ledger_type = #{ledgerType}
+            ) t
+    </select>
+    <select id="selectVhLedgerMainListNoDate" resultType="java.lang.Integer">
+        SELECT
+        count(1) num
+        FROM
+        vh_ledger_main t
+        LEFT JOIN vh_business_info t1 ON t.business_no = t1.business_no
+        <where>
+            <if test="param1.vehicleCode != null  and param1.vehicleCode != ''">
+                and t.vehicle_code = #{param1.vehicleCode}
+            </if>
+            <if test="param1.ledgerType != null">and t.ledger_type = #{param1.ledgerType}</if>
+            <if test="businessType != null ">and t1.business_type = #{businessType}</if>
+            <if test="param1.maintainDate != null ">and t.maintain_date = #{param1.maintainDate}</if>
+            <if test="param1.maintainDept != null and param1.maintainDept != ''">and t.maintain_dept =
+                #{param1.maintainDept}
+            </if>
+        </where>
+        AND t1.business_code IN
+        <foreach item="code" collection="codes" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </select>
+
+    <select id="selectVhLedgerCount" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM vh_ledger_main
+        <where>
+            <if test="vehicleCode != null  and vehicleCode != ''">and vehicle_code = #{vehicleCode}</if>
+            <if test="delFlag != null and delFlag != ''">and del_flag = #{delFlag}</if>
+            <if test="completeStatus != null and completeStatus != '' ">and complete_status != 1</if>
+            <if test="maintainDept != null and maintainDept != ''">and maintain_dept = #{maintainDept}
+            </if>
+        </where>
+
+    </select>
+
+
+    <insert id="insertVhLedgerMain" parameterType="VhLedgerMain" useGeneratedKeys="true" keyProperty="id">
+        insert into vh_ledger_main
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="businessNo != null  and businessNo != ''">business_no,</if>
+            <if test="vehicleCode != null  and vehicleCode != ''">vehicle_code,</if>
+            <if test="totalCrashBook != null">total_crash_book,</if>
+            <if test="totalPartsAmount != null">total_parts_amount,</if>
+            <if test="totalAmount != null">total_amount,</if>
+            <if test="completeStatus != null ">complete_status,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="predictCompleteDate != null ">predict_complete_date,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="unfinishedReason != null  and unfinishedReason != ''">unfinished_reason,</if>
+            <if test="exceptionStatus != null ">exception_status,</if>
+            <if test="handleResult != null  and handleResult != ''">handle_result,</if>
+            <if test="delFlag != null ">del_flag,</if>
+            <if test="lossNo != null  and lossNo != ''">loss_no,</if>
+            <if test="damageReason != null  and damageReason != ''">damage_reason,</if>
+            <if test="ledgerType != null ">ledger_type,</if>
+            <if test="maintainDept != null  and maintainDept != ''">maintain_dept,</if>
+            <if test="maintainShift != null  and maintainShift != ''">maintain_shift,</if>
+            <if test="niCompany != null  and niCompany != ''">ni_company,</if>
+            <if test="maintainer != null and maintainer != ''">maintainer,</if>
+            <if test="maintainDate != null">maintain_date,</if>
+            <if test="nextUpkeepDate != null">next_upkeep_date,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="custom != null and custom != ''">custom,</if>
+            <if test="staffNum != null and staffNum != ''">staff_num,</if>
+            <if test="consignee != null and consignee != ''">consignee,</if>
+            <if test="processStartTime != null">process_start_time,</if>
+            <if test="processEndTime != null">process_end_time,</if>
+            <if test="userDept != null and userDept != ''">user_dept,</if>
+            <if test="orderStatus != null and orderStatus != ''">order_status,</if>
+            <if test="statusRemark != null and statusRemark != ''">status_remark,</if>
+            <if test="mileage != null and mileage != ''">mileage,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="businessNo != null  and businessNo != ''">#{businessNo},</if>
+            <if test="vehicleCode != null  and vehicleCode != ''">#{vehicleCode},</if>
+            <if test="totalCrashBook != null">#{totalCrashBook},</if>
+            <if test="totalPartsAmount != null">#{totalPartsAmount},</if>
+            <if test="totalAmount != null">#{totalAmount},</if>
+            <if test="completeStatus != null ">#{completeStatus},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="predictCompleteDate != null ">#{predictCompleteDate},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="unfinishedReason != null  and unfinishedReason != ''">#{unfinishedReason},</if>
+            <if test="exceptionStatus != null ">#{exceptionStatus},</if>
+            <if test="handleResult != null  and handleResult != ''">#{handleResult},</if>
+            <if test="delFlag != null ">#{delFlag},</if>
+            <if test="lossNo != null  and lossNo != ''">#{lossNo},</if>
+            <if test="damageReason != null  and damageReason != ''">#{damageReason},</if>
+            <if test="ledgerType != null ">#{ledgerType},</if>
+            <if test="maintainDept != null  and maintainDept != ''">#{maintainDept},</if>
+            <if test="maintainShift != null  and maintainShift != ''">#{maintainShift},</if>
+            <if test="niCompany != null  and niCompany != ''">#{niCompany},</if>
+            <if test="maintainer != null and maintainer != ''">#{maintainer},</if>
+            <if test="maintainDate != null and maintainDate">#{maintainDate},</if>
+            <if test="nextUpkeepDate != null and nextUpkeepDate">#{nextUpkeepDate},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="custom != null and custom">#{custom},</if>
+            <if test="staffNum != null and staffNum">#{staffNum},</if>
+            <if test="consignee != null and consignee">#{consignee},</if>
+            <if test="processStartTime != null">#{processStartTime},</if>
+            <if test="processEndTime != null">#{processEndTime},</if>
+            <if test="userDept != null and userDept != ''">#{userDept},</if>
+            <if test="orderStatus != null and orderStatus != ''">#{orderStatus},</if>
+            <if test="statusRemark != null and statusRemark != ''">#{statusRemark},</if>
+            <if test="mileage != null and mileage != ''">#{mileage},</if>
+        </trim>
+    </insert>
+
+    <update id="updateVhLedgerMain" parameterType="VhLedgerMain">
+        update vh_ledger_main
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="businessNo != null  and businessNo != ''">business_no = #{businessNo},</if>
+            <if test="vehicleCode != null  and vehicleCode != ''">vehicle_code = #{vehicleCode},</if>
+            <if test="totalCrashBook != null">total_crash_book = #{totalCrashBook},</if>
+            <if test="totalPartsAmount != null">total_parts_amount =
+                #{totalPartsAmount},
+            </if>
+            <if test="totalAmount != null ">total_amount = #{totalAmount},</if>
+            <if test="completeStatus != null ">complete_status = #{completeStatus},</if>
+            <if test="remark != null  ">remark = #{remark},</if>
+            <if test="predictCompleteDate != null ">predict_complete_date = #{predictCompleteDate},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="unfinishedReason != null  and unfinishedReason != ''">unfinished_reason = #{unfinishedReason},
+            </if>
+            <if test="exceptionStatus != null ">exception_status = #{exceptionStatus},</if>
+            <if test="handleResult != null  and handleResult != ''">handle_result = #{handleResult},</if>
+            <if test="delFlag != null and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="lossNo != null  and lossNo != ''">loss_no = #{lossNo},</if>
+            <if test="damageReason != null  and damageReason != ''">damage_reason = #{damageReason},</if>
+            <if test="ledgerType != null ">ledger_type = #{ledgerType},</if>
+            <if test="maintainDept != null  and maintainDept != ''">maintain_dept = #{maintainDept},</if>
+            <if test="maintainShift != null  and maintainShift != ''">maintain_shift = #{maintainShift},</if>
+            <if test="niCompany != null  and niCompany != ''">ni_company = #{niCompany},</if>
+            <if test="maintainer != null and maintainer != ''">maintainer = #{maintainer},</if>
+            <if test="maintainDate != null">maintain_date = #{maintainDate},</if>
+            <if test="nextUpkeepDate != null">next_upkeep_date = #{nextUpkeepDate},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="custom != null and custom != ''">custom = #{custom},</if>
+            <if test="staffNum != null and staffNum != ''">staff_num = #{staffNum},</if>
+            <if test="consignee != null and consignee != ''">consignee = #{consignee},</if>
+            <if test="processStartTime != null">process_start_time = #{processStartTime},
+            </if>
+            <if test="processEndTime != null">process_end_time = #{processEndTime},</if>
+            <if test="userDept != null and userDept != ''">user_dept = #{userDept},</if>
+            <if test="orderStatus != null and orderStatus != ''">order_status = #{orderStatus},</if>
+            <if test="statusRemark != null and statusRemark != ''">status_remark = #{statusRemark},</if>
+            <if test="delDate != null">del_date = #{delDate},</if>
+
+        </trim>
+        <where>
+            <if test="id != null">and id = #{id}</if>
+            <if test="businessNo != null  and businessNo != ''">and business_no = #{businessNo}</if>
+        </where>
+    </update>
+    <update id="updateStatus">
+        update vh_ledger_main
+        set order_status = #{orderStatus}, status_remark = #{statusRemark}
+        where business_no = #{businessNo}
+    </update>
+
+    <delete id="deleteVhLedgerMainById" parameterType="Long">
+        delete from vh_ledger_main where id = #{id}
+    </delete>
+
+    <delete id="deleteVhLedgerMainByIds" parameterType="String">
+        delete from vh_ledger_main where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

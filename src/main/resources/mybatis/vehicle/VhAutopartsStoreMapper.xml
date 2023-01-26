@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vehicle.project.vehicle.mapper.VhAutopartsStoreMapper">
+
+    <resultMap type="VhAutopartsStore" id="VhAutopartsStoreResult">
+        <result property="id" column="id"/>
+        <result property="storeNo" column="store_no"/>
+        <result property="material" column="material"/>
+        <result property="materialCode" column="material_code"/>
+        <result property="materialName" column="material_name"/>
+        <result property="stockNum" column="stock_num"/>
+        <result property="materialUnit" column="material_unit"/>
+        <result property="amount" column="amount"/>
+        <result property="totalAmount" column="total_amount"/>
+        <result property="ultimoUseNum" column="ultimo_use_num"/>
+        <result property="sixMonthsNum" column="six_months_num"/>
+        <result property="onlineNum" column="online_num"/>
+        <result property="safetyStock" column="safety_stock"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+        <result property="useRemark" column="use_remark"/>
+        <result property="spec" column="spec"/>
+    </resultMap>
+
+    <sql id="selectVhAutopartsStoreVo">
+        select id, store_no, use_remark, spec, material, material_code, material_name, stock_num, material_unit, amount, total_amount, ultimo_use_num, six_months_num, online_num, safety_stock, create_time, update_time, remark from vh_autoparts_store
+    </sql>
+
+    <select id="selectVhAutopartsStoreList" parameterType="VhAutopartsStore" resultMap="VhAutopartsStoreResult">
+        <include refid="selectVhAutopartsStoreVo"/>
+        <where>
+            <if test="storeNo != null  and storeNo != ''">and store_no like concat('%', #{storeNo}, '%')</if>
+            <if test="materialCode != null  and materialCode != ''">and material_code like concat('%', #{materialCode},'%')</if>
+            <if test="useRemark != null  and useRemark != ''">and use_remark like concat('%',#{useRemark},'%')</if>
+            <if test="material != null  and material != ''">and material like concat('%', #{material},'%')
+            </if>
+            <if test="materialName != null  and materialName != ''">and material_name like concat('%', #{materialName},'%')
+            </if>
+            <if test="spec != null  and spec != ''">and spec like concat('%', #{spec},'%')</if>
+            <if test="stockNum != null ">and stock_num = #{stockNum}</if>
+            <if test="materialUnit != null  and materialUnit != ''">and material_unit = #{materialUnit}</if>
+            <if test="amount != null ">and amount = #{amount}</if>
+            <if test="totalAmount != null ">and total_amount = #{totalAmount}</if>
+            <if test="ultimoUseNum != 0 ">and ultimo_use_num = #{ultimoUseNum}</if>
+            <if test="sixMonthsNum != 0 ">and six_months_num = #{sixMonthsNum}</if>
+            <if test="onlineNum != null ">and online_num = #{onlineNum}</if>
+            <if test="safetyStockFlag == true">
+                and safety_stock - stock_num > 0
+                and ultimo_use_num > 2
+            </if>
+            <if test="minSafetyStockFlag == true">
+                and six_months_num - stock_num > 0
+                and ultimo_use_num > 2
+            </if>
+        </where>
+        ORDER BY
+        ultimo_use_num DESC
+    </select>
+
+    <select id="selectVhAutopartsStorePageList" parameterType="VhAutopartsStore" resultMap="VhAutopartsStoreResult">
+        <include refid="selectVhAutopartsStoreVo"/>
+        <where>
+            <if test="storeNo != null  and storeNo != ''">and store_no like concat('%', #{storeNo}, '%')</if>
+            <if test="materialCode != null  and materialCode != ''">and material_code like concat('%', #{materialCode},
+                '%')
+            </if>
+            <if test="materialName != null  and materialName != ''">and material_name like concat('%', #{materialName},
+                '%')
+            </if>
+            <if test="stockNum != null ">and stock_num = #{stockNum}</if>
+            <if test="materialUnit != null  and materialUnit != ''">and material_unit = #{materialUnit}</if>
+            <if test="amount != null ">and amount = #{amount}</if>
+            <if test="totalAmount != null ">and total_amount = #{totalAmount}</if>
+            <if test="ultimoUseNum != 0 ">and ultimo_use_num = #{ultimoUseNum}</if>
+            <if test="sixMonthsNum != 0 ">and six_months_num = #{sixMonthsNum}</if>
+            <if test="onlineNum != null ">and online_num = #{onlineNum}</if>
+            <if test="safetyStock != null ">and safety_stock = #{safetyStock}</if>
+        </where>
+    </select>
+
+    <select id="selectVhAutopartsStoreById" parameterType="Long" resultMap="VhAutopartsStoreResult">
+        <include refid="selectVhAutopartsStoreVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectVhAutopartsStore" resultMap="VhAutopartsStoreResult">
+        <include refid="selectVhAutopartsStoreVo"/>
+        <where>
+            <if test="storeNo != null  and storeNo != ''">and store_no like concat('%', #{storeNo}, '%')</if>
+            <if test="materialCode != null  and materialCode != ''">and material_code like concat('%', #{materialCode},
+                '%')
+            </if>
+            <if test="materialName != null  and materialName != ''">and material_name like concat('%', #{materialName},
+                '%')
+            </if>
+            <if test="stockNum != null ">and stock_num = #{stockNum}</if>
+            <if test="materialUnit != null  and materialUnit != ''">and material_unit = #{materialUnit}</if>
+            <if test="amount != null ">and amount = #{amount}</if>
+            <if test="totalAmount != null ">and total_amount = #{totalAmount}</if>
+            <if test="ultimoUseNum != 0 ">and ultimo_use_num = #{ultimoUseNum}</if>
+            <if test="sixMonthsNum != 0 ">and six_months_num = #{sixMonthsNum}</if>
+            <if test="onlineNum != null ">and online_num = #{onlineNum}</if>
+            <if test="safetyStock != null ">and safety_stock = #{safetyStock}</if>
+        </where>
+    </select>
+    <select id="selectPartsUseNum" resultType="com.vehicle.project.vehicle.pojo.PartsUseNumVo">
+        SELECT
+            t1.business_code businessCode,
+            round(t1.num/6)  sixMonthsNum,
+            t.num ultimoUseNum
+        FROM
+            (
+                SELECT
+                    t1.business_code,
+                    SUM(t1.amount) num
+                FROM
+                    vh_ledger_main t
+                LEFT JOIN vh_business_info t1 ON t.business_no = t1.business_no
+                WHERE
+                    1 = 1
+                AND business_type = 15
+                AND maintain_date >= date_sub(now(), INTERVAL 30 DAY)
+                AND t.maintain_dept = '汽修一厂'
+                AND t.del_flag = '0'
+                AND t1.del_flag = '0'
+                GROUP BY
+                    business_code
+            ) t
+        RIGHT JOIN (
+            SELECT
+                t1.business_code,
+                SUM(t1.amount) num
+            FROM
+                vh_ledger_main t
+            LEFT JOIN vh_business_info t1 ON t.business_no = t1.business_no
+            WHERE
+                1 = 1
+            AND business_type = 15
+            AND maintain_date >= date_sub(now(), INTERVAL 6 MONTH)
+            AND t.maintain_dept = '汽修一厂'
+            AND t.del_flag = '0'
+            AND t1.del_flag = '0'
+            GROUP BY
+                business_code
+        ) t1 ON t.business_code = t1.business_code
+    </select>
+    <select id="selectVhAutopartsListByCodeAndName" resultMap="VhAutopartsStoreResult">
+        <include refid="selectVhAutopartsStoreVo"/>
+        <where>
+            <if test="materialCode != null  and materialCode != ''">
+                and material_code like concat('%', #{materialCode}, '%')
+            </if>
+            <if test="materialCode != null  and materialCode != ''">
+                Or material_name like concat('%', #{materialCode}, '%')
+            </if>
+        </where>
+    </select>
+
+
+    <insert id="insertVhAutopartsStore" parameterType="VhAutopartsStore" useGeneratedKeys="true" keyProperty="id">
+        insert into vh_autoparts_store
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="storeNo != null  and storeNo != ''">store_no,</if>
+            <if test="materialCode != null  and materialCode != ''">material_code,</if>
+            <if test="materialName != null  and materialName != ''">material_name,</if>
+            <if test="stockNum != null ">stock_num,</if>
+            <if test="materialUnit != null  and materialUnit != ''">material_unit,</if>
+            <if test="amount != null ">amount,</if>
+            <if test="totalAmount != null ">total_amount,</if>
+            <if test="ultimoUseNum != 0 ">ultimo_use_num,</if>
+            <if test="sixMonthsNum != 0 ">six_months_num,</if>
+            <if test="onlineNum != null ">online_num,</if>
+            <if test="safetyStock != null ">safety_stock,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="spec != null  and spec != ''">spec,</if>
+            <if test="useRemark != null  and useRemark != ''">use_remark,</if>
+            <if test="material != null  and material != ''">material,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="storeNo != null  and storeNo != ''">#{storeNo},</if>
+            <if test="materialCode != null  and materialCode != ''">#{materialCode},</if>
+            <if test="materialName != null  and materialName != ''">#{materialName},</if>
+            <if test="stockNum != null ">#{stockNum},</if>
+            <if test="materialUnit != null  and materialUnit != ''">#{materialUnit},</if>
+            <if test="amount != null ">#{amount},</if>
+            <if test="totalAmount != null ">#{totalAmount},</if>
+            <if test="ultimoUseNum != 0 ">#{ultimoUseNum},</if>
+            <if test="sixMonthsNum != 0 ">#{sixMonthsNum},</if>
+            <if test="onlineNum != null ">#{onlineNum},</if>
+            <if test="safetyStock != null ">#{safetyStock},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="spec != null  and spec != ''">#{spec},</if>
+            <if test="useRemark != null  and useRemark != ''">#{useRemark},</if>
+            <if test="material != null  and material != ''">#{material},</if>
+        </trim>
+    </insert>
+    <insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO
+        vh_autoparts_store(material_code,material,material_name,spec,use_remark,
+        stock_num,material_unit,amount,
+        total_amount,online_num,safety_stock)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.materialCode},
+            #{item.material},
+            #{item.materialName},
+            #{item.spec},
+            #{item.useRemark},
+            #{item.stockNum},
+            #{item.materialUnit},
+            #{item.amount},
+            #{item.totalAmount},
+            #{item.onlineNum},
+            #{item.safetyStock}
+            )
+        </foreach>
+    </insert>
+
+
+    <update id="updateVhAutopartsStore" parameterType="VhAutopartsStore">
+        update vh_autoparts_store
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="storeNo != null  and storeNo != ''">store_no = #{storeNo},</if>
+            <if test="materialCode != null  and materialCode != ''">material_code = #{materialCode},</if>
+            <if test="materialName != null  and materialName != ''">material_name = #{materialName},</if>
+            <if test="stockNum != null ">stock_num = #{stockNum},</if>
+            <if test="materialUnit != null  and materialUnit != ''">material_unit = #{materialUnit},</if>
+            <if test="amount != null ">amount = #{amount},</if>
+            <if test="totalAmount != null ">total_amount = #{totalAmount},</if>
+            <if test="ultimoUseNum != 0 ">ultimo_use_num = #{ultimoUseNum},</if>
+            <if test="sixMonthsNum != 0 ">six_months_num = #{sixMonthsNum},</if>
+            <if test="onlineNum != null ">online_num = #{onlineNum},</if>
+            <if test="safetyStock != null ">safety_stock = #{safetyStock},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="spec != null  and spec != ''">spec = #{spec},</if>
+            <if test="useRemark != null  and useRemark != ''">use_remark = #{useRemark},</if>
+            <if test="material != null  and material != ''">material = #{material},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="batchUpdate">
+        update vh_autoparts_store
+        <trim prefix="SET" suffixOverrides=",">
+            <trim prefix="store_no = case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when id = (#{item.id})
+                    then #{item.storeNo}
+                </foreach>
+            </trim>
+            <trim prefix="material_code = case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when id = (#{item.id})
+                    then #{item.materialCode}
+                </foreach>
+            </trim>
+            <trim prefix="material_name = case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when id = (#{item.id})
+                    then #{item.materialName}
+                </foreach>
+            </trim>
+            <trim prefix="stock_num = case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when id = (#{item.id})
+                    then #{item.stockNum}
+                </foreach>
+            </trim>
+            <trim prefix="material_unit = case" suffix="end">
+                <foreach collection="list" item="item">
+                    when id = (#{item.id})
+                    then #{item.materialUnit}
+                </foreach>
+            </trim>
+            <trim prefix="amount = case" suffix="end">
+                <foreach collection="list" item="item">
+                    when id = (#{item.id})
+                    then #{item.amount}
+                </foreach>
+            </trim>
+
+            <trim prefix="total_amount = case" suffix="end">
+                <foreach collection="list" item="item">
+                    when id = (#{item.id})
+                    then #{item.totalAmount}
+                </foreach>
+            </trim>
+            <trim prefix="online_num = case" suffix="end">
+                <foreach collection="list" item="item">
+                    when id = (#{item.id})
+                    then #{item.onlineNum}
+                </foreach>
+            </trim>
+            <trim prefix="safety_stock = case" suffix="end">
+                <foreach collection="list" item="item">
+                    when id = (#{item.id})
+                    then #{item.safetyStock}
+                </foreach>
+            </trim>
+            where
+            id in
+            <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+                #{item.id}
+            </foreach>
+
+        </trim>
+    </update>
+
+
+    <delete id="deleteVhAutopartsStoreById" parameterType="Long">
+        delete from vh_autoparts_store where id = #{id}
+    </delete>
+
+    <delete id="deleteVhAutopartsStoreByIds" parameterType="String">
+        delete from vh_autoparts_store where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

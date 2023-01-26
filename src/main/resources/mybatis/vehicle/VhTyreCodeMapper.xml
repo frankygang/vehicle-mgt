@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vehicle.project.vehicle.mapper.VhTyreCodeMapper">
+
+    <resultMap type="VhTyreCode" id="VhTyreCodeResult">
+        <result property="id" column="id"/>
+        <result property="tyreCode" column="tyre_code"/>
+        <result property="tyreItem" column="tyre_item"/>
+        <result property="maintainHour" column="maintain_hour"/>
+        <result property="crashBook" column="crash_book"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="maintainDept" column="maintain_dept"/>
+        <result property="dataScope"     column="data_scope"    />
+    </resultMap>
+
+    <sql id="selectVhTyreCodeVo">
+        select t.id, tyre_code, tyre_item, maintain_hour, crash_book, t.create_time, t.create_by, t.update_time, t.update_by ,maintain_dept
+        from vh_tyre_code t
+        LEFT JOIN sys_user u ON u.user_id = t.user_id
+        LEFT JOIN sys_dept d ON u.dept_id = d.dept_id
+    </sql>
+
+    <select id="selectVhTyreCodeList" parameterType="VhTyreCode" resultMap="VhTyreCodeResult">
+        <include refid="selectVhTyreCodeVo"/>
+        <where>
+            <if test="tyreCode != null  and tyreCode != ''">and tyre_code like concat ('%', #{tyreCode}, '%')</if>
+            <if test="tyreItem != null  and tyreItem != ''">and tyre_item like concat ('%', #{tyreItem},'%')</if>
+            <if test="maintainHour != null  and maintainHour != ''">and maintain_hour like concat ('%', #{maintainHour},'%')</if>
+            <if test="crashBook != null  and crashBook != ''">and crash_book = #{crashBook}</if>
+            ${dataScope}
+        </where>
+    </select>
+
+    <select id="selectVhTyreCodeById" parameterType="Long" resultMap="VhTyreCodeResult">
+        <include refid="selectVhTyreCodeVo"/>
+        where t.id = #{id}
+    </select>
+
+    <select id="selectVhTyreCodeByIds" parameterType="Long" resultMap="VhTyreCodeResult">
+        <include refid="selectVhTyreCodeVo"/>
+        where t.id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+    <select id="selectVhTyreCodeByCode" resultMap="VhTyreCodeResult">
+        <include refid="selectVhTyreCodeVo"/>
+        where tyre_code = #{tyreCode}
+    </select>
+    <select id="selectVhTyreCode" resultType="com.vehicle.project.vehicle.domain.VhTyreCode">
+        <include refid="selectVhTyreCodeVo"/>
+        <where>
+            <if test="tyreCode != null  and tyreCode != ''">and tyre_code like concat ('%', #{tyreCode}, '%')</if>
+            <if test="tyreItem != null  and tyreItem != ''">and tyre_item like concat ('%', #{tyreItem},'%')</if>
+            <if test="maintainHour != null  and maintainHour != ''">and maintain_hour = #{maintainHour}</if>
+            <if test="crashBook != null  and crashBook != ''">and crash_book = #{crashBook}</if>
+            <if test="maintainDept != null  and maintainDept != ''">and maintain_dept = #{maintainDept}</if>
+        </where>
+    </select>
+
+    <select id="selectVhTyreCodeByCodeAndDept" resultType="com.vehicle.project.vehicle.domain.VhTyreCode">
+        <include refid="selectVhTyreCodeVo"/>
+        where tyre_code = #{tyreCode} and maintain_dept = #{maintainDept}
+    </select>
+
+    <insert id="insertVhTyreCode" parameterType="VhTyreCode" useGeneratedKeys="true" keyProperty="id">
+        insert into vh_tyre_code
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tyreCode != null  and tyreCode != ''">tyre_code,</if>
+            <if test="tyreItem != null  and tyreItem != ''">tyre_item,</if>
+            <if test="maintainHour != null  and maintainHour != ''">maintain_hour,</if>
+            <if test="crashBook != null  and crashBook != ''">crash_book,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="maintainDept != null  and maintainDept != ''">maintain_dept,</if>
+            <if test="userId != null  and userId != ''">user_id,</if>
+            create_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tyreCode != null  and tyreCode != ''">#{tyreCode},</if>
+            <if test="tyreItem != null  and tyreItem != ''">#{tyreItem},</if>
+            <if test="maintainHour != null  and maintainHour != ''">#{maintainHour},</if>
+            <if test="crashBook != null  and crashBook != ''">#{crashBook},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="maintainDept != null  and maintainDept != ''">#{maintainDept},</if>
+            <if test="userId != null  and userId != ''">#{userId},</if>
+            sysdate()
+        </trim>
+    </insert>
+
+    <update id="updateVhTyreCode" parameterType="VhTyreCode">
+        update vh_tyre_code
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="tyreCode != null  and tyreCode != ''">tyre_code = #{tyreCode},</if>
+            <if test="tyreItem != null  and tyreItem != ''">tyre_item = #{tyreItem},</if>
+            <if test="maintainHour != null  and maintainHour != ''">maintain_hour = #{maintainHour},</if>
+            <if test="crashBook != null  and crashBook != ''">crash_book = #{crashBook},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteVhTyreCodeById" parameterType="Long">
+        delete from vh_tyre_code where id = #{id}
+    </delete>
+
+    <delete id="deleteVhTyreCodeByIds" parameterType="String">
+        delete from vh_tyre_code where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

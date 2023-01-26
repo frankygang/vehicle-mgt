@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vehicle.project.vehicle.mapper.VhVehicleInfoMapper">
+
+    <resultMap type="VhVehicleInfo" id="VhVehicleInfoResult">
+        <result property="id" column="id"/>
+        <result property="vehicleCode" column="vehicle_code"/>
+        <result property="vehicleBrands" column="vehicle_brands"/>
+        <result property="vehicleType" column="vehicle_type"/>
+        <result property="vehicleModelNum" column="vehicle_model_num"/>
+        <result property="vehicleModelNum2" column="vehicle_model_num_b"/>
+        <result property="userDept" column="user_dept"/>
+        <result property="leaveFactoryDate" column="leave_factory_date"/>
+        <result property="entryFactoryDate" column="entry_factory_date"/>
+        <result property="vehicleAge" column="vehicle_age"/>
+        <result property="vehicleOwner" column="vehicle_owner"/>
+        <result property="phone" column="phone"/>
+        <result property="maintainDept" column="maintain_dept"/>
+        <result property="maintainShift" column="maintain_shift"/>
+        <result property="belongCompany" column="belong_company"/>
+        <result property="belongDept" column="belong_dept"/>
+        <result property="remark" column="remark"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="ledgerType" column="ledger_type"/>
+        <result property="userId" column="user_id"/>
+        <result property="dataScope" column="data_scope"/>
+    </resultMap>
+
+    <sql id="selectVhVehicleInfoVo">
+        select t.id, vehicle_code,vehicle_brands, vehicle_type, vehicle_model_num, vehicle_model_num_b, t.user_dept, leave_factory_date,entry_factory_date, vehicle_age,vehicle_owner, t.phone,
+            maintain_dept, maintain_shift,belong_company, belong_dept, t.remark, t.del_flag, ledger_type
+        from vh_vehicle_info t
+        LEFT JOIN sys_user u ON u.user_id = t.user_id
+        LEFT JOIN sys_dept d ON u.dept_id = d.dept_id
+    </sql>
+
+
+    <select id="selectVhVehicleInfoList" parameterType="VhVehicleInfo" resultMap="VhVehicleInfoResult">
+        <include refid="selectVhVehicleInfoVo"/>
+        <where>
+            <if test="vehicleCode != null  and vehicleCode != ''">
+                and vehicle_code like concat('%', #{vehicleCode}, '%')
+            </if>
+            <if test="vehicleBrands != null  and vehicleBrands != ''">
+                and vehicle_brands like concat('%', #{vehicleBrands}, '%')
+            </if>
+            <if test="vehicleType != null  and vehicleType != ''">
+                and vehicle_type like concat('%', #{vehicleType}, '%')
+            </if>
+            <if test="vehicleModelNum != null  and vehicleModelNum != ''">
+                and vehicle_model_num like concat('%', #{vehicleModelNum}, '%')
+            </if>
+            <if test="vehicleModelNum2 != null  and vehicleModelNum2 != ''">
+                and vehicle_model_num_b like concat('%', #{vehicleModelNum2}, '%')
+            </if>
+            <if test="userDept != null  and userDept != ''">
+                and t.user_dept like concat('%' #{userDept}, '%')
+            </if>
+            <if test="leaveFactoryDate != null ">and leave_factory_date = #{leaveFactoryDate}</if>
+            <if test="entryFactoryDate != null ">and entry_factory_date = #{entryFactoryDate}</if>
+            <if test="vehicleAge != null  and vehicleAge != ''">
+                and vehicle_age like concat('%' #{vehicleAge}, '%')
+            </if>
+            <if test="vehicleOwner != null  and vehicleOwner != ''">
+                and vehicle_owner like concat('%', #{vehicleOwner}, '%')
+            </if>
+            <if test="phone != null  and phone != ''">
+                and t.phone like concat('%', #{phone}, '%')
+            </if>
+            <if test="maintainDept != null  and maintainDept != ''">and maintain_dept = #{maintainDept}</if>
+            <if test="maintainShift != null  and maintainShift != ''">and maintain_shift = #{maintainShift}</if>
+            <if test="belongCompany != null  and belongCompany != ''">
+                and belong_company like concat('%', #{belongCompany}, '%')
+            </if>  <if test="belongDept != null  and belongDept != ''">
+                and belong_dept like concat('%', #{belongDept}, '%')
+            </if>
+            <if test="ledgerType != null">and ledger_type = #{ledgerType}</if>
+            <if test="delFlag != null">and t.del_flag = #{delFlag}</if>
+            ${dataScope}
+        </where>
+
+    </select>
+
+    <select id="selectVhVehicleInfoById" parameterType="Long" resultMap="VhVehicleInfoResult">
+        <include refid="selectVhVehicleInfoVo"/>
+        where t.id = #{id}
+        and t.del_flag = '0'
+    </select>
+
+    <select id="selectVhVehicleInfoByCode" resultMap="VhVehicleInfoResult">
+        <include refid="selectVhVehicleInfoVo"/>
+        WHERE vehicle_code = #{vehicleCode}
+        and t.del_flag = '0'
+    </select>
+
+
+    <select id="selectVhVehicleInfoByIds" parameterType="Long" resultMap="VhVehicleInfoResult">
+        <include refid="selectVhVehicleInfoVo"/>
+        where t.id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        and t.del_flag = '0'
+    </select>
+
+    <select id="selectVhVehicleListNoScope" resultMap="VhVehicleInfoResult">
+
+        <include refid="selectVhVehicleInfoVo"/>
+        <where>
+            <if test="vehicleCode != null  and vehicleCode != ''">
+                and vehicle_code = #{vehicleCode}
+            </if>
+            <if test="vehicleBrands != null  and vehicleBrands != ''">
+                and vehicle_brands like concat('%', #{vehicleBrands}, '%')
+            </if>
+            <if test="vehicleType != null  and vehicleType != ''">
+                and vehicle_type like concat('%', #{vehicleType}, '%')
+            </if>
+            <if test="vehicleModelNum != null  and vehicleModelNum != ''">
+                and vehicle_model_num like concat('%', #{vehicleModelNum}, '%')
+            </if>
+            <if test="vehicleModelNum != null  and vehicleModelNum != ''">
+                and vehicle_model_num_b like concat('%', #{vehicleModelNum2}, '%')
+            </if>
+            <if test="userDept != null  and userDept != ''">
+                and t.user_dept like concat('%' #{userDept}, '%')
+            </if>
+            <if test="leaveFactoryDate != null ">and leave_factory_date = #{leaveFactoryDate}</if>
+            <if test="vehicleOwner != null  and vehicleOwner != ''">
+                and vehicle_owner like concat('%', #{vehicleOwner}, '%')
+            </if>
+            <if test="phone != null  and phone != ''">
+                and t.phone like concat('%', #{phone}, '%')
+            </if>
+            <if test="maintainDept != null  and maintainDept != ''">and maintain_dept = #{maintainDept}</if>
+            <if test="maintainShift != null  and maintainShift != ''">and maintain_shift = #{maintainShift}</if>
+            <if test="belongCompany != null  and belongCompany != ''">
+                and belong_company like concat('%', #{belongCompany}, '%')
+            </if> <if test="belongDept != null  and belongDept != ''">
+                and belong_dept like concat('%', #{belongDept}, '%')
+            </if>
+            <if test="ledgerType != null">and ledger_type = #{ledgerType}</if>
+            <if test="delFlag != null">and t.del_flag = #{delFlag}</if>
+        </where>
+
+    </select>
+
+    <select id="selectVhVehicleInfo" resultMap="VhVehicleInfoResult">
+
+        <include refid="selectVhVehicleInfoVo"/>
+        <where>
+            <if test="vehicleCode != null  and vehicleCode != ''">
+                and vehicle_code like concat( #{vehicleCode}, '%')
+            </if>
+            <if test="vehicleBrands != null  and vehicleBrands != ''">
+                and vehicle_brands like concat('%', #{vehicleBrands}, '%')
+            </if>
+            <if test="vehicleType != null  and vehicleType != ''">
+                and vehicle_type like concat('%', #{vehicleType}, '%')
+            </if>
+            <if test="vehicleModelNum != null  and vehicleModelNum != ''">
+                and vehicle_model_num like concat('%', #{vehicleModelNum}, '%')
+            </if>
+              <if test="vehicleModelNum2 != null  and vehicleModelNum2 != ''">
+                and vehicle_model_num_b like concat('%', #{vehicleModelNum2}, '%')
+            </if>
+            <if test="userDept != null  and userDept != ''">
+                and t.user_dept like concat('%' #{userDept}, '%')
+            </if>
+            <if test="leaveFactoryDate != null ">and leave_factory_date = #{leaveFactoryDate}</if>
+            <if test="entryFactoryDate != null ">and entry_factory_date = #{entryFactoryDate}</if>
+            <if test="vehicleAge != null ">and vehicle_age = #{vehicleAge}</if>
+            <if test="vehicleOwner != null  and vehicleOwner != ''">
+                and vehicle_owner like concat('%', #{vehicleOwner}, '%')
+            </if>
+            <if test="phone != null  and phone != ''">
+                and t.phone like concat('%', #{phone}, '%')
+            </if>
+            <if test="maintainDept != null  and maintainDept != ''">and maintain_dept = #{maintainDept}</if>
+            <if test="maintainShift != null  and maintainShift != ''">and maintain_shift = #{maintainShift}</if>
+            <if test="belongCompany != null  and belongCompany != ''">
+                and belong_company like concat('%', #{belongCompany}, '%')
+            </if> <if test="belongDept != null  and belongDept != ''">
+                and belong_dept like concat('%', #{belongDept}, '%')
+            </if>
+            <if test="ledgerType != null">and ledger_type = #{ledgerType}</if>
+            <if test="delFlag != null">and t.del_flag = #{delFlag}</if>
+        </where>
+
+    </select>
+
+    <insert id="insertVhVehicleInfo" parameterType="VhVehicleInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into vh_vehicle_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="vehicleCode != null  and vehicleCode != ''">vehicle_code,</if>
+            <if test="vehicleBrands != null  and vehicleBrands != ''">vehicle_brands,</if>
+            <if test="vehicleType != null  and vehicleType != ''">vehicle_type,</if>
+            <if test="vehicleModelNum != null  and vehicleModelNum != ''">vehicle_model_num,</if>
+            <if test="vehicleModelNum2 != null  and vehicleModelNum2 != ''">vehicle_model_num_b,</if>
+            <if test="userDept != null  and userDept != ''">user_dept,</if>
+            <if test="leaveFactoryDate != null ">leave_factory_date,</if>
+            <if test="entryFactoryDate != null ">entry_factory_date,</if>
+            <if test="vehicleAge != null ">vehicle_age,</if>
+            <if test="vehicleOwner != null  and vehicleOwner != ''">vehicle_owner,</if>
+            <if test="phone != null  and phone != ''">phone,</if>
+            <if test="maintainDept != null  and maintainDept != ''">maintain_dept,</if>
+            <if test="maintainShift != null  and maintainShift != ''">maintain_shift,</if>
+            <if test="belongCompany != null  and belongCompany != ''">belong_company,</if>
+            <if test="belongDept != null  and belongDept != ''">belong_dept,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="ledgerType != null">ledger_type,</if>
+            <if test="userId != null">user_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="vehicleCode != null  and vehicleCode != ''">#{vehicleCode},</if>
+            <if test="vehicleBrands != null  and vehicleBrands != ''">#{vehicleBrands},</if>
+            <if test="vehicleType != null  and vehicleType != ''">#{vehicleType},</if>
+            <if test="vehicleModelNum != null  and vehicleModelNum != ''">#{vehicleModelNum},</if>
+            <if test="vehicleModelNum2 != null  and vehicleModelNum2 != ''">#{vehicleModelNum2},</if>
+            <if test="userDept != null  and userDept != ''">#{userDept},</if>
+            <if test="leaveFactoryDate != null ">#{leaveFactoryDate},</if>
+            <if test="entryFactoryDate != null ">#{entryFactoryDate},</if>
+            <if test="vehicleAge != null ">#{vehicleAge},</if>
+            <if test="vehicleOwner != null  and vehicleOwner != ''">#{vehicleOwner},</if>
+            <if test="phone != null  and phone != ''">#{phone},</if>
+            <if test="maintainDept != null  and maintainDept != ''">#{maintainDept},</if>
+            <if test="maintainShift != null  and maintainShift != ''">#{maintainShift},</if>
+            <if test="belongCompany != null  and belongCompany != ''">#{belongCompany},</if>
+            <if test="belongDept != null  and belongDept != ''">#{belongDept},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="ledgerType != null">#{ledgerType},</if>
+            <if test="userId != null">#{userId},</if>
+        </trim>
+    </insert>
+
+    <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        insert into vh_vehicle_info (vehicle_code,vehicle_brands,vehicle_type,vehicle_model_num,vehicle_model_num_b,user_dept,
+        leave_factory_date,entry_factory_date,vehicle_age,vehicle_owner,phone,maintain_dept,maintain_shift,belong_company,belong_dept,
+        remark,create_by,update_by,del_flag,ledger_type,user_id,
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.vehicleCode},
+            #{item.vehicleBrands},
+            #{item.vehicleType},
+            #{item.vehicleModelNum},
+            #{item.vehicleModelNum2},
+            #{item.userDept},
+            #{item.leaveFactoryDate},
+            #{item.entryFactoryDate},
+            #{item.vehicleAge},
+            #{item.vehicleOwner},
+            #{item.phone},
+            #{item.maintainDept},
+            #{item.maintainShift},
+            #{item.belongCompany},
+            #{item.belongDept},
+            #{item.remark},
+            #{item.createBy},
+            #{item.updateBy},
+            #{item.delFlag},
+            #{item.ledgerType},
+            #{item.userId}
+            )
+        </foreach>>
+
+    </insert>
+
+    <update id="updateVhVehicleInfo" parameterType="VhVehicleInfo">
+        update vh_vehicle_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="vehicleCode != null  and vehicleCode != ''">vehicle_code = #{vehicleCode},</if>
+            <if test="vehicleBrands != null  and vehicleBrands != ''">vehicle_brands = #{vehicleBrands},</if>
+            <if test="vehicleType != null  and vehicleType != ''">vehicle_type = #{vehicleType},</if>
+            <if test="vehicleModelNum != null  and vehicleModelNum != ''">vehicle_model_num = #{vehicleModelNum},</if>
+            <if test="vehicleModelNum2 != null  and vehicleModelNum2 != ''">vehicle_model_num_b = #{vehicleModelNum2},</if>
+            <if test="userDept != null  and userDept != ''">user_dept = #{userDept},</if>
+            <if test="leaveFactoryDate != null ">leave_factory_date = #{leaveFactoryDate},</if>
+            <if test="entryFactoryDate != null ">entry_factory_date = #{entryFactoryDate},</if>
+            <if test="vehicleAge != null  and vehicleAge != ''">vehicle_age = #{vehicleAge},</if>
+            <if test="vehicleOwner != null  and vehicleOwner != ''">vehicle_owner = #{vehicleOwner},</if>
+            <if test="phone != null  and phone != ''">phone = #{phone},</if>
+            <if test="maintainDept != null  and maintainDept != ''">maintain_dept = #{maintainDept},</if>
+            <if test="maintainShift != null  and maintainShift != ''">maintain_shift = #{maintainShift},</if>
+            <if test="belongCompany != null  and belongCompany != ''">belong_company = #{belongCompany},</if>
+            <if test="belongDept != null  and belongDept != ''">belong_dept = #{belongDept},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="ledgerType != null">ledger_type = #{ledgerType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="cleanAll">
+        delete from vh_vehicle_info where maintain_dept = #{deptName}
+    </update>
+
+    <delete id="deleteVhVehicleInfoById" parameterType="Long">
+        delete from vh_vehicle_info where id = #{id}
+    </delete>
+
+    <delete id="deleteVhVehicleInfoByIds" parameterType="String">
+        delete from vh_vehicle_info where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

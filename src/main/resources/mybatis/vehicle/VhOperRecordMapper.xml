@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vehicle.project.vehicle.mapper.VhOperRecordMapper">
+
+    <resultMap type="VhOperRecord" id="VhOperRecordResult">
+        <result property="id" column="id"/>
+        <result property="operDate" column="oper_date"/>
+        <result property="operPeople" column="oper_people"/>
+        <result property="operRecord" column="oper_record"/>
+    </resultMap>
+
+    <sql id="selectVhOperRecordVo">
+        select id, oper_date, oper_people, oper_record from vh_oper_record
+    </sql>
+
+    <select id="selectVhOperRecordList" parameterType="VhOperRecord" resultMap="VhOperRecordResult">
+        <include refid="selectVhOperRecordVo"/>
+        <where>
+            <if test="operDate != null ">and oper_date = #{operDate}</if>
+            <if test="operPeople != null  and operPeople != ''">and oper_people = #{operPeople}</if>
+            <if test="operRecord != null  and operRecord != ''">and oper_record = #{operRecord}</if>
+        </where>
+    </select>
+
+    <select id="selectVhOperRecordById" parameterType="Long" resultMap="VhOperRecordResult">
+        <include refid="selectVhOperRecordVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertVhOperRecord" parameterType="VhOperRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into vh_oper_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="operDate != null ">oper_date,</if>
+            <if test="operPeople != null  and operPeople != ''">oper_people,</if>
+            <if test="operRecord != null  and operRecord != ''">oper_record,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="operDate != null ">#{operDate},</if>
+            <if test="operPeople != null  and operPeople != ''">#{operPeople},</if>
+            <if test="operRecord != null  and operRecord != ''">#{operRecord},</if>
+        </trim>
+    </insert>
+
+    <update id="updateVhOperRecord" parameterType="VhOperRecord">
+        update vh_oper_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="operDate != null ">oper_date = #{operDate},</if>
+            <if test="operPeople != null  and operPeople != ''">oper_people = #{operPeople},</if>
+            <if test="operRecord != null  and operRecord != ''">oper_record = #{operRecord},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteVhOperRecordById" parameterType="Long">
+        delete from vh_oper_record where id = #{id}
+    </delete>
+
+    <delete id="deleteVhOperRecordByIds" parameterType="String">
+        delete from vh_oper_record where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

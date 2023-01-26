@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vehicle.project.vehicle.mapper.VhUpkeepLedgerMapper">
+
+    <resultMap type="VhUpkeepLedger" id="VhUpkeepLedgerResult">
+        <result property="id" column="id"/>
+        <result property="upkeepNo" column="upkeep_no"/>
+        <result property="upkeepDate" column="upkeep_date"/>
+        <result property="upkeepType" column="upkeep_type"/>
+        <result property="upkeepContent" column="upkeep_content"/>
+        <result property="upkeepDept" column="upkeep_dept"/>
+        <result property="upkeepShift" column="upkeep_shift"/>
+        <result property="upkeepMan" column="upkeep_man"/>
+        <result property="vehicleCode" column="vehicle_code"/>
+        <result property="vehicleType" column="vehicle_type"/>
+        <result property="vehicleModelNum" column="vehicle_model_num"/>
+        <result property="userDept" column="user_dept"/>
+        <result property="leaveFactoryDate" column="leave_factory_date"/>
+        <result property="vehicleOwner" column="vehicle_owner"/>
+        <result property="phone" column="phone"/>
+        <result property="partsInfo" column="parts_info"/>
+        <result property="partsAmount" column="parts_amount"/>
+        <result property="crashBook" column="crash_book"/>
+        <result property="totalAmount" column="total_amount"/>
+        <result property="remark" column="remark"/>
+        <result property="completeStatus" column="complete_status"/>
+        <result property="finallyUpdateDate" column="finally_update_date"/>
+        <result property="nextUpkeepDate" column="next_upkeep_date"/>
+        <result property="exceptionStatus" column="exception_status"/>
+        <result property="exceptionInfo" column="exception_info"/>
+        <result property="handleResult" column="handle_result"/>
+        <result property="delFlag" column="del_flag"/>
+    </resultMap>
+
+    <sql id="selectVhUpkeepLedgerVo">
+        select id, upkeep_no, upkeep_date, upkeep_type, upkeep_content, upkeep_dept, upkeep_shift, upkeep_man, vehicle_code, vehicle_type, vehicle_model_num, user_dept, leave_factory_date, vehicle_owner, phone, parts_info, parts_amount, crash_book, total_amount, remark, complete_status, finally_update_date, next_upkeep_date, exception_status, exception_info, handle_result, del_flag from vh_upkeep_ledger
+    </sql>
+
+    <select id="selectVhUpkeepLedgerList" parameterType="VhUpkeepLedger" resultMap="VhUpkeepLedgerResult">
+        <include refid="selectVhUpkeepLedgerVo"/>
+        <where>
+            <if test="upkeepNo != null  and upkeepNo != ''">and upkeep_no = #{upkeepNo}</if>
+            <if test="upkeepDate != null ">and upkeep_date = #{upkeepDate}</if>
+            <if test="upkeepType != null  and upkeepType != ''">and upkeep_type = #{upkeepType}</if>
+            <if test="upkeepContent != null  and upkeepContent != ''">and upkeep_content = #{upkeepContent}</if>
+            <if test="upkeepDept != null  and upkeepDept != ''">and upkeep_dept = #{upkeepDept}</if>
+            <if test="upkeepShift != null  and upkeepShift != ''">and upkeep_shift = #{upkeepShift}</if>
+            <if test="upkeepMan != null  and upkeepMan != ''">and upkeep_man = #{upkeepMan}</if>
+            <if test="vehicleCode != null  and vehicleCode != ''">and vehicle_code = #{vehicleCode}</if>
+            <if test="vehicleType != null  and vehicleType != ''">and vehicle_type = #{vehicleType}</if>
+            <if test="vehicleModelNum != null  and vehicleModelNum != ''">and vehicle_model_num = #{vehicleModelNum}
+            </if>
+            <if test="userDept != null  and userDept != ''">and user_dept = #{userDept}</if>
+            <if test="leaveFactoryDate != null  and leaveFactoryDate != ''">and leave_factory_date =
+                #{leaveFactoryDate}
+            </if>
+            <if test="vehicleOwner != null  and vehicleOwner != ''">and vehicle_owner = #{vehicleOwner}</if>
+            <if test="phone != null  and phone != ''">and phone = #{phone}</if>
+            <if test="partsInfo != null  and partsInfo != ''">and parts_info = #{partsInfo}</if>
+            <if test="partsAmount != null  and partsAmount != ''">and parts_amount = #{partsAmount}</if>
+            <if test="crashBook != null  and crashBook != ''">and crash_book = #{crashBook}</if>
+            <if test="totalAmount != null  and totalAmount != ''">and total_amount = #{totalAmount}</if>
+            <if test="completeStatus != null  and completeStatus != ''">and complete_status = #{completeStatus}</if>
+            <if test="finallyUpdateDate != null ">and finally_update_date = #{finallyUpdateDate}</if>
+            <if test="nextUpkeepDate != null ">and next_upkeep_date = #{nextUpkeepDate}</if>
+            <if test="exceptionStatus != null  and exceptionStatus != ''">and exception_status = #{exceptionStatus}</if>
+            <if test="exceptionInfo != null  and exceptionInfo != ''">and exception_info = #{exceptionInfo}</if>
+            <if test="handleResult != null  and handleResult != ''">and handle_result = #{handleResult}</if>
+        </where>
+    </select>
+
+    <select id="selectVhUpkeepLedgerById" parameterType="Long" resultMap="VhUpkeepLedgerResult">
+        <include refid="selectVhUpkeepLedgerVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertVhUpkeepLedger" parameterType="VhUpkeepLedger" useGeneratedKeys="true" keyProperty="id">
+        insert into vh_upkeep_ledger
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="upkeepNo != null  and upkeepNo != ''">upkeep_no,</if>
+            <if test="upkeepDate != null ">upkeep_date,</if>
+            <if test="upkeepType != null  and upkeepType != ''">upkeep_type,</if>
+            <if test="upkeepContent != null  and upkeepContent != ''">upkeep_content,</if>
+            <if test="upkeepDept != null  and upkeepDept != ''">upkeep_dept,</if>
+            <if test="upkeepShift != null  and upkeepShift != ''">upkeep_shift,</if>
+            <if test="upkeepMan != null  and upkeepMan != ''">upkeep_man,</if>
+            <if test="vehicleCode != null  and vehicleCode != ''">vehicle_code,</if>
+            <if test="vehicleType != null  and vehicleType != ''">vehicle_type,</if>
+            <if test="vehicleModelNum != null  and vehicleModelNum != ''">vehicle_model_num,</if>
+            <if test="userDept != null  and userDept != ''">user_dept,</if>
+            <if test="leaveFactoryDate != null  and leaveFactoryDate != ''">leave_factory_date,</if>
+            <if test="vehicleOwner != null  and vehicleOwner != ''">vehicle_owner,</if>
+            <if test="phone != null  and phone != ''">phone,</if>
+            <if test="partsInfo != null  and partsInfo != ''">parts_info,</if>
+            <if test="partsAmount != null  and partsAmount != ''">parts_amount,</if>
+            <if test="crashBook != null  and crashBook != ''">crash_book,</if>
+            <if test="totalAmount != null  and totalAmount != ''">total_amount,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="completeStatus != null  and completeStatus != ''">complete_status,</if>
+            <if test="finallyUpdateDate != null ">finally_update_date,</if>
+            <if test="nextUpkeepDate != null ">next_upkeep_date,</if>
+            <if test="exceptionStatus != null  and exceptionStatus != ''">exception_status,</if>
+            <if test="exceptionInfo != null  and exceptionInfo != ''">exception_info,</if>
+            <if test="handleResult != null  and handleResult != ''">handle_result,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="upkeepNo != null  and upkeepNo != ''">#{upkeepNo},</if>
+            <if test="upkeepDate != null ">#{upkeepDate},</if>
+            <if test="upkeepType != null  and upkeepType != ''">#{upkeepType},</if>
+            <if test="upkeepContent != null  and upkeepContent != ''">#{upkeepContent},</if>
+            <if test="upkeepDept != null  and upkeepDept != ''">#{upkeepDept},</if>
+            <if test="upkeepShift != null  and upkeepShift != ''">#{upkeepShift},</if>
+            <if test="upkeepMan != null  and upkeepMan != ''">#{upkeepMan},</if>
+            <if test="vehicleCode != null  and vehicleCode != ''">#{vehicleCode},</if>
+            <if test="vehicleType != null  and vehicleType != ''">#{vehicleType},</if>
+            <if test="vehicleModelNum != null  and vehicleModelNum != ''">#{vehicleModelNum},</if>
+            <if test="userDept != null  and userDept != ''">#{userDept},</if>
+            <if test="leaveFactoryDate != null  and leaveFactoryDate != ''">#{leaveFactoryDate},</if>
+            <if test="vehicleOwner != null  and vehicleOwner != ''">#{vehicleOwner},</if>
+            <if test="phone != null  and phone != ''">#{phone},</if>
+            <if test="partsInfo != null  and partsInfo != ''">#{partsInfo},</if>
+            <if test="partsAmount != null  and partsAmount != ''">#{partsAmount},</if>
+            <if test="crashBook != null  and crashBook != ''">#{crashBook},</if>
+            <if test="totalAmount != null  and totalAmount != ''">#{totalAmount},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="completeStatus != null  and completeStatus != ''">#{completeStatus},</if>
+            <if test="finallyUpdateDate != null ">#{finallyUpdateDate},</if>
+            <if test="nextUpkeepDate != null ">#{nextUpkeepDate},</if>
+            <if test="exceptionStatus != null  and exceptionStatus != ''">#{exceptionStatus},</if>
+            <if test="exceptionInfo != null  and exceptionInfo != ''">#{exceptionInfo},</if>
+            <if test="handleResult != null  and handleResult != ''">#{handleResult},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateVhUpkeepLedger" parameterType="VhUpkeepLedger">
+        update vh_upkeep_ledger
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="upkeepNo != null  and upkeepNo != ''">upkeep_no = #{upkeepNo},</if>
+            <if test="upkeepDate != null ">upkeep_date = #{upkeepDate},</if>
+            <if test="upkeepType != null  and upkeepType != ''">upkeep_type = #{upkeepType},</if>
+            <if test="upkeepContent != null  and upkeepContent != ''">upkeep_content = #{upkeepContent},</if>
+            <if test="upkeepDept != null  and upkeepDept != ''">upkeep_dept = #{upkeepDept},</if>
+            <if test="upkeepShift != null  and upkeepShift != ''">upkeep_shift = #{upkeepShift},</if>
+            <if test="upkeepMan != null  and upkeepMan != ''">upkeep_man = #{upkeepMan},</if>
+            <if test="vehicleCode != null  and vehicleCode != ''">vehicle_code = #{vehicleCode},</if>
+            <if test="vehicleType != null  and vehicleType != ''">vehicle_type = #{vehicleType},</if>
+            <if test="vehicleModelNum != null  and vehicleModelNum != ''">vehicle_model_num = #{vehicleModelNum},</if>
+            <if test="userDept != null  and userDept != ''">user_dept = #{userDept},</if>
+            <if test="leaveFactoryDate != null  and leaveFactoryDate != ''">leave_factory_date = #{leaveFactoryDate},
+            </if>
+            <if test="vehicleOwner != null  and vehicleOwner != ''">vehicle_owner = #{vehicleOwner},</if>
+            <if test="phone != null  and phone != ''">phone = #{phone},</if>
+            <if test="partsInfo != null  and partsInfo != ''">parts_info = #{partsInfo},</if>
+            <if test="partsAmount != null  and partsAmount != ''">parts_amount = #{partsAmount},</if>
+            <if test="crashBook != null  and crashBook != ''">crash_book = #{crashBook},</if>
+            <if test="totalAmount != null  and totalAmount != ''">total_amount = #{totalAmount},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="completeStatus != null  and completeStatus != ''">complete_status = #{completeStatus},</if>
+            <if test="finallyUpdateDate != null ">finally_update_date = #{finallyUpdateDate},</if>
+            <if test="nextUpkeepDate != null ">next_upkeep_date = #{nextUpkeepDate},</if>
+            <if test="exceptionStatus != null  and exceptionStatus != ''">exception_status = #{exceptionStatus},</if>
+            <if test="exceptionInfo != null  and exceptionInfo != ''">exception_info = #{exceptionInfo},</if>
+            <if test="handleResult != null  and handleResult != ''">handle_result = #{handleResult},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteVhUpkeepLedgerById" parameterType="Long">
+        delete from vh_upkeep_ledger where id = #{id}
+    </delete>
+
+    <delete id="deleteVhUpkeepLedgerByIds" parameterType="String">
+        delete from vh_upkeep_ledger where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

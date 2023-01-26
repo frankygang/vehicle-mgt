@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vehicle.project.vehicle.mapper.VhCommonPartsImportMapper">
+    
+    <resultMap type="VhCommonPartsImport" id="VhCommonPartsImportResult">
+        <result property="id"    column="id"    />
+        <result property="businessNo"    column="business_no"    />
+        <result property="materialCode"    column="material_code"    />
+        <result property="materialName"    column="material_name"    />
+        <result property="materialUnit"    column="material_unit"    />
+        <result property="amount"    column="amount"    />
+        <result property="cost"    column="cost"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="userId" column="user_id"/>
+        <result property="dataScope"     column="data_scope"/>
+    </resultMap>
+
+    <sql id="selectVhCommonPartsImportVo">
+        select t.id, business_no, material_code, material_name, material_unit, amount, cost, t.create_time, t.create_by, t.update_time, t.update_by
+        from vh_common_parts_import t
+        LEFT JOIN sys_user u ON u.user_id = t.user_id
+        LEFT JOIN sys_dept d ON u.dept_id = d.dept_id
+    </sql>
+
+    <select id="selectVhCommonPartsImportList" parameterType="VhCommonPartsImport" resultMap="VhCommonPartsImportResult">
+        <include refid="selectVhCommonPartsImportVo"/>
+        <where>  
+            <if test="businessNo != null  and businessNo != ''"> and business_no like concat('%', #{businessNo}, '%')</if>
+            <if test="materialCode != null  and materialCode != ''"> and material_code like concat('%', #{materialCode}, '%')</if>
+            <if test="materialName != null  and materialName != ''"> and material_name like concat('%', #{materialName}, '%')</if>
+            <if test="materialUnit != null  and materialUnit != ''"> and material_unit = #{materialUnit}</if>
+            <if test="amount != null  and amount != ''"> and amount = #{amount}</if>
+            ${dataScope}
+        </where>
+    </select>
+    
+    <select id="selectVhCommonPartsImportById" parameterType="Long" resultMap="VhCommonPartsImportResult">
+        <include refid="selectVhCommonPartsImportVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertVhCommonPartsImport" parameterType="VhCommonPartsImport" useGeneratedKeys="true" keyProperty="id">
+        insert into vh_common_parts_import
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="businessNo != null  and businessNo != ''">business_no,</if>
+            <if test="materialCode != null  and materialCode != ''">material_code,</if>
+            <if test="materialName != null  and materialName != ''">material_name,</if>
+            <if test="materialUnit != null  and materialUnit != ''">material_unit,</if>
+            <if test="amount != null  and amount != ''">amount,</if>
+            <if test="cost != null  and cost != ''">cost,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="maintainDept != null  and maintainDept != ''">maintain_dept,</if>
+            <if test="userId != null  and userId != ''">user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="businessNo != null  and businessNo != ''">#{businessNo},</if>
+            <if test="materialCode != null  and materialCode != ''">#{materialCode},</if>
+            <if test="materialName != null  and materialName != ''">#{materialName},</if>
+            <if test="materialUnit != null  and materialUnit != ''">#{materialUnit},</if>
+            <if test="amount != null  and amount != ''">#{amount},</if>
+            <if test="cost != null  and cost != ''">#{cost},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="maintainDept != null  and maintainDept != ''">#{maintainDept},</if>
+            <if test="userId != null  and userId != ''">#{userId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateVhCommonPartsImport" parameterType="VhCommonPartsImport">
+        update vh_common_parts_import
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="businessNo != null  and businessNo != ''">business_no = #{businessNo},</if>
+            <if test="materialCode != null  and materialCode != ''">material_code = #{materialCode},</if>
+            <if test="materialName != null  and materialName != ''">material_name = #{materialName},</if>
+            <if test="materialUnit != null  and materialUnit != ''">material_unit = #{materialUnit},</if>
+            <if test="amount != null  and amount != ''">amount = #{amount},</if>
+            <if test="cost != null  and cost != ''">cost = #{cost},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="cleanAll">
+        delete from vh_common_parts_import where maintain_dept = #{deptName}
+    </update>
+
+    <delete id="deleteVhCommonPartsImportById" parameterType="Long">
+        delete from vh_common_parts_import where id = #{id}
+    </delete>
+
+    <delete id="deleteVhCommonPartsImportByIds" parameterType="String">
+        delete from vh_common_parts_import where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

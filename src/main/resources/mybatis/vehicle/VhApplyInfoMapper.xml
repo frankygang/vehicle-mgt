@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vehicle.project.vehicle.mapper.VhApplyInfoMapper">
+
+    <resultMap type="VhApplyInfo" id="VhApplyInfoResult">
+        <result property="id" column="id"/>
+        <result property="purchaseNo" column="purchase_no"/>
+        <result property="materialType" column="material_type"/>
+        <result property="materialSeq" column="material_seq"/>
+        <result property="materialName" column="material_name"/>
+        <result property="spec" column="spec"/>
+        <result property="materialUnit" column="material_unit"/>
+        <result property="declaredQuantity" column="declared_quantity"/>
+        <result property="requireTime" column="require_time"/>
+        <result property="stockNum" column="stock_num"/>
+        <result property="safetyStock" column="safety_stock"/>
+        <result property="onlineNum" column="online_num"/>
+        <result property="useRemark" column="use_remark"/>
+        <result property="ultimoUseNum" column="ultimo_use_num"/>
+        <result property="sixMonthsNum" column="six_months_num"/>
+        <result property="materialOwner" column="material_owner"/>
+        <result property="transferFlag" column="transfer_flag"/>
+        <result property="materialDept" column="material_dept"/>
+        <result property="grade" column="grade"/>
+        <result property="remark" column="remark"/>
+        <result property="applyDate" column="apply_date"/>
+        <result property="materialCode" column="material_code"/>
+        <result property="applyFlag" column="apply_flag"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="arrivalTime" column="arrival_time"/>
+        <result property="arrivalNum" column="arrival_num"/>
+    </resultMap>
+
+    <sql id="selectVhApplyInfoVo">
+        select id, purchase_no,arrival_time, arrival_num, material_type, material_seq, material_name, spec, material_unit, declared_quantity, require_time, stock_num, safety_stock, online_num, use_remark, ultimo_use_num, six_months_num, material_owner, transfer_flag, material_dept, grade, remark, apply_date, material_code, apply_flag, create_time, update_time from vh_apply_info
+    </sql>
+
+    <select id="selectVhApplyInfoList" parameterType="VhApplyInfo" resultMap="VhApplyInfoResult">
+        <include refid="selectVhApplyInfoVo"/>
+        <where>
+            <if test="purchaseNo != null  and purchaseNo != ''">
+                and purchase_no like concat('%', #{purchaseNo},'%')
+            </if>
+            <if test="materialType != null  and materialType != ''">and material_type = #{materialType}</if>
+            <if test="materialSeq != null ">and material_seq = #{materialSeq}</if>
+            <if test="materialName != null  and materialName != ''">
+                and material_name like concat('%', #{materialName},'%')
+            </if>
+            <if test="spec != null  and spec != ''">and spec = #{spec}</if>
+            <if test="materialUnit != null  and materialUnit != ''">and material_unit = #{materialUnit}</if>
+            <if test="declaredQuantity != null  and declaredQuantity != ''">and declared_quantity =
+                #{declaredQuantity}
+            </if>
+            <if test="requireTime != null  and requireTime != ''">and require_time = #{requireTime}</if>
+            <if test="stockNum != null ">and stock_num = #{stockNum}</if>
+            <if test="safetyStock != null ">and safety_stock = #{safetyStock}</if>
+            <if test="onlineNum != null ">and online_num = #{onlineNum}</if>
+            <if test="useRemark != null  and useRemark != ''">and use_remark = #{useRemark}</if>
+            <if test="ultimoUseNum != null ">and ultimo_use_num = #{ultimoUseNum}</if>
+            <if test="sixMonthsNum != null ">and six_months_num = #{sixMonthsNum}</if>
+            <if test="materialOwner != null  and materialOwner != ''">and material_owner = #{materialOwner}</if>
+            <if test="transferFlag != null  and transferFlag != ''">and transfer_flag = #{transferFlag}</if>
+            <if test="materialDept != null  and materialDept != ''">and material_dept = #{materialDept}</if>
+            <if test="grade != null  and grade != ''">and grade = #{grade}</if>
+            <if test="applyDate != null ">and apply_date = #{applyDate}</if>
+            <if test="materialCode != null  and materialCode != ''">and material_code = #{materialCode}</if>
+            <if test="applyFlag != null ">and apply_flag = #{applyFlag}</if>
+            <if test="arrivalStatus != null and arrivalStatus == 0">
+                and declared_quantity = arrival_num
+            </if>
+            <if test="arrivalStatus != null and arrivalStatus == 1">
+                and declared_quantity > arrival_num
+            </if>
+            <if test="arrivalStatus != null and arrivalStatus == 2">
+                and arrival_num = 0
+            </if>
+        </where>
+    </select>
+
+    <select id="selectVhApplyInfoById" parameterType="Long" resultMap="VhApplyInfoResult">
+        <include refid="selectVhApplyInfoVo"/>
+        where id = #{id}
+    </select>
+    <select id="genPurchaseNo" resultType="com.vehicle.project.vehicle.domain.VhApplyInfo">
+        SELECT
+            purchase_no purchaseNo,
+            material_seq + 1 materialSeq
+        FROM
+            vh_apply_info
+        ORDER BY
+            create_time DESC
+        LIMIT 1
+
+    </select>
+
+
+    <insert id="insertVhApplyInfo" parameterType="VhApplyInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into vh_apply_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="purchaseNo != null  and purchaseNo != ''">purchase_no,</if>
+            <if test="materialType != null  and materialType != ''">material_type,</if>
+            <if test="materialSeq != null ">material_seq,</if>
+            <if test="materialName != null  and materialName != ''">material_name,</if>
+            <if test="spec != null  and spec != ''">spec,</if>
+            <if test="materialUnit != null  and materialUnit != ''">material_unit,</if>
+            <if test="declaredQuantity != null  and declaredQuantity != ''">declared_quantity,</if>
+            <if test="requireTime != null  and requireTime != ''">require_time,</if>
+            <if test="stockNum != null ">stock_num,</if>
+            <if test="safetyStock != null ">safety_stock,</if>
+            <if test="onlineNum != null ">online_num,</if>
+            <if test="useRemark != null  and useRemark != ''">use_remark,</if>
+            <if test="ultimoUseNum != null ">ultimo_use_num,</if>
+            <if test="sixMonthsNum != null ">six_months_num,</if>
+            <if test="materialOwner != null  and materialOwner != ''">material_owner,</if>
+            <if test="transferFlag != null  and transferFlag != ''">transfer_flag,</if>
+            <if test="materialDept != null  and materialDept != ''">material_dept,</if>
+            <if test="grade != null  and grade != ''">grade,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="applyDate != null ">apply_date,</if>
+            <if test="materialCode != null  and materialCode != ''">material_code,</if>
+            <if test="applyFlag != null ">apply_flag,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="arrivalTime != null ">arrival_time,</if>
+            <if test="arrivalNum != null ">arrival_num,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="purchaseNo != null  and purchaseNo != ''">#{purchaseNo},</if>
+            <if test="materialType != null  and materialType != ''">#{materialType},</if>
+            <if test="materialSeq != null ">#{materialSeq},</if>
+            <if test="materialName != null  and materialName != ''">#{materialName},</if>
+            <if test="spec != null  and spec != ''">#{spec},</if>
+            <if test="materialUnit != null  and materialUnit != ''">#{materialUnit},</if>
+            <if test="declaredQuantity != null  and declaredQuantity != ''">#{declaredQuantity},</if>
+            <if test="requireTime != null  and requireTime != ''">#{requireTime},</if>
+            <if test="stockNum != null ">#{stockNum},</if>
+            <if test="safetyStock != null ">#{safetyStock},</if>
+            <if test="onlineNum != null ">#{onlineNum},</if>
+            <if test="useRemark != null  and useRemark != ''">#{useRemark},</if>
+            <if test="ultimoUseNum != null ">#{ultimoUseNum},</if>
+            <if test="sixMonthsNum != null ">#{sixMonthsNum},</if>
+            <if test="materialOwner != null  and materialOwner != ''">#{materialOwner},</if>
+            <if test="transferFlag != null  and transferFlag != ''">#{transferFlag},</if>
+            <if test="materialDept != null  and materialDept != ''">#{materialDept},</if>
+            <if test="grade != null  and grade != ''">#{grade},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="applyDate != null ">#{applyDate},</if>
+            <if test="materialCode != null  and materialCode != ''">#{materialCode},</if>
+            <if test="applyFlag != null ">#{applyFlag},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="arrivalTime != null ">#{arrivalTime},</if>
+            <if test="arrivalNum != null ">#{arrivalNum},</if>
+        </trim>
+    </insert>
+
+    <update id="updateVhApplyInfo" parameterType="VhApplyInfo">
+        update vh_apply_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="purchaseNo != null  and purchaseNo != ''">purchase_no = #{purchaseNo},</if>
+            <if test="materialType != null  and materialType != ''">material_type = #{materialType},</if>
+            <if test="materialSeq != null ">material_seq = #{materialSeq},</if>
+            <if test="materialName != null  and materialName != ''">material_name = #{materialName},</if>
+            <if test="spec != null  and spec != ''">spec = #{spec},</if>
+            <if test="materialUnit != null  and materialUnit != ''">material_unit = #{materialUnit},</if>
+            <if test="declaredQuantity != null  and declaredQuantity != ''">declared_quantity = #{declaredQuantity},
+            </if>
+            <if test="requireTime != null  and requireTime != ''">require_time = #{requireTime},</if>
+            <if test="stockNum != null ">stock_num = #{stockNum},</if>
+            <if test="safetyStock != null ">safety_stock = #{safetyStock},</if>
+            <if test="onlineNum != null ">online_num = #{onlineNum},</if>
+            <if test="useRemark != null  and useRemark != ''">use_remark = #{useRemark},</if>
+            <if test="ultimoUseNum != null ">ultimo_use_num = #{ultimoUseNum},</if>
+            <if test="sixMonthsNum != null ">six_months_num = #{sixMonthsNum},</if>
+            <if test="materialOwner != null  and materialOwner != ''">material_owner = #{materialOwner},</if>
+            <if test="transferFlag != null  and transferFlag != ''">transfer_flag = #{transferFlag},</if>
+            <if test="materialDept != null  and materialDept != ''">material_dept = #{materialDept},</if>
+            <if test="grade != null  and grade != ''">grade = #{grade},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="applyDate != null ">apply_date = #{applyDate},</if>
+            <if test="materialCode != null  and materialCode != ''">material_code = #{materialCode},</if>
+            <if test="applyFlag != null ">apply_flag = #{applyFlag},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="arrivalTime != null ">arrival_time = #{arrivalTime},</if>
+            <if test="arrivalNum != null ">arrival_num = #{arrivalNum},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteVhApplyInfoById" parameterType="Long">
+        delete from vh_apply_info where id = #{id}
+    </delete>
+
+    <delete id="deleteVhApplyInfoByIds" parameterType="String">
+        delete from vh_apply_info where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
